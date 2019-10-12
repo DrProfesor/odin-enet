@@ -1,11 +1,10 @@
+package enet
+
 when ODIN_OS == "windows" {
-	import "core:sys/windows.odin";
-	foreign import enet32 "enet.lib";
+	foreign import enet32 "enet_static.lib";
 }
 
-using import "enet/list.odin";
-using import "enet/protocol.odin";
-
+using import "enettypes"
 
 foreign enet32 {
 
@@ -225,12 +224,12 @@ Event_Type :: enum i32 {
 	Receive    = 3,
 }
 
-Address :: struct #ordered {
-	host: u32,
+Address :: struct {
+	host: [8]u16,
 	port: u16,
 }
 
-Packet :: struct #ordered {
+Packet :: struct {
 	ref_count: uint,
 	flags: u32,
 	data: ^u8,
@@ -239,13 +238,13 @@ Packet :: struct #ordered {
 	user_data: rawptr,
 }
 
-Acknowledgement :: struct #ordered {
+Acknowledgement :: struct {
 	acknowledgement_list: List_Node,
 	sent_time: u32,
 	command: Protocol,
 }
 
-Outgoing_Command :: struct #ordered {
+Outgoing_Command :: struct {
 	outgoing_command_list: List_Node,
 	reliable_sequence_number: u16,
 	unreliable_sequence_number: u16,
@@ -259,7 +258,7 @@ Outgoing_Command :: struct #ordered {
 	packet: ^Packet,
 }
 
-Incoming_Command :: struct #ordered {
+Incoming_Command :: struct {
 	incoming_command_list: List_Node,
 	reliable_sequence_number: u16,
 	unreliable_sequence_number: u16,
@@ -270,7 +269,7 @@ Incoming_Command :: struct #ordered {
 	packet: ^Packet,
 }
 
-Channel :: struct #ordered {
+Channel :: struct {
 	outgoing_reliable_sequence_number: u16,
 	outgoing_unreliable_sequence_number: u16,
 	used_reliable_windows: u16,
@@ -281,7 +280,7 @@ Channel :: struct #ordered {
 	incoming_unreliable_commands: List,
 }
 
-Peer :: struct #ordered {
+Peer :: struct {
 	dispatch_list: List_Node,
 	host: ^Host,
 	outgoing_peer_id: u16,
@@ -344,19 +343,19 @@ Peer :: struct #ordered {
 	total_waiting_data: uint,
 }
 
-Buffer :: struct #ordered {
+Buffer :: struct {
 	data_len: uint,
 	data: rawptr,
 }
 
-Compressor :: struct #ordered {
+Compressor :: struct {
 	ctx: rawptr,
 	compress: #type proc(ctx: rawptr, buffers: ^Buffer, buffer_count: uint, limit: uint, out_data: ^u8, out_limit: uint) -> uint,
 	decompress: #type proc(ctx: rawptr, data: ^u8, limit: uint, out_data: ^u8, out_limit: uint) -> uint,
 	destroy: #type proc(ctx: rawptr),
 }
 
-Host :: struct #ordered {
+Host :: struct {
 	socket: Socket,
 	address: Address,
 	incoming_bandwidth: u32,
@@ -395,7 +394,7 @@ Host :: struct #ordered {
 	maximum_waiting_data: uint,
 }
 
-Event :: struct #ordered {
+Event :: struct {
 	event_type: Event_Type,
 	peer: ^Peer,
 	channel_id: u8,
@@ -403,7 +402,7 @@ Event :: struct #ordered {
 	packet: ^Packet,
 }
 
-Callbacks :: struct #ordered {
+Callbacks :: struct {
 	malloc: #type proc(size: u32),
 	free: #type proc(memory: rawptr),
 	no_memory: #type proc(),

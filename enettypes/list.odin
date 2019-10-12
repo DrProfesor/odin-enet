@@ -1,10 +1,12 @@
-List_Node :: struct #ordered {
+package enettypes
+
+List_Node :: struct {
 	next: ^List_Node,
 	previous: ^List_Node,
 }
 
 ListIterator :: ^List_Node;
 
-List :: struct #ordered {
+List :: struct {
 	sentinel: List_Node,
 }

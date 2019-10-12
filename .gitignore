@@ -10,3 +10,4 @@ include/quick.c
 .swp
 *.lib
 *.exe
+*.pdb

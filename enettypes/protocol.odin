@@ -1,3 +1,5 @@
+package enettypes
+
 Protocol_Header :: struct #packed {
 	peer_id, sent_time: u16,
 }
